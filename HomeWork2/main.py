@@ -8,6 +8,7 @@ from joblib import dump, load
 from matplotlib import pyplot as plt
 
 from sklearn.preprocessing import normalize
+from sklearn.preprocessing import StandardScaler
 from sklearn.datasets import make_regression
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
@@ -71,6 +72,11 @@ if __name__ == "__main__":
     model.fit(X_train, y_train)
     print(f'model.fit(X_train, y_train)\n {model.fit(X_train, y_train)}')
 
+    scalar = StandardScaler(with_std=True)
+    scalar.fit(X_test, y_test)
+    to_compare_metrics = scalar.scale_
+    print(f'To_compare_metrics (scalar.scale_)\n {to_compare_metrics}')
+
     model.predict(X_test)
     print(f'model.predict(X_test)\n {model.predict(X_test)}')
     model.score(X_test, y_test)
@@ -83,7 +89,7 @@ if __name__ == "__main__":
     # Save model with joblib
     dump(model, f'{file_path}/modelunivar.joblib')
     # Save data to test
-    dump([X_test, y_test], f'{file_path}/test_data_univar.joblib')
+    dump([X, y], f'{file_path}/test_data_univar.joblib')
 
     # Multivariate model training
     multi_selection = df.drop(['id', 'date', 'price', 'zipcode'], axis=1)
@@ -100,22 +106,69 @@ if __name__ == "__main__":
     print(f'X_normalized\n {X_normalized}')
     print(X_normalized)
     print(f'X_normalized.shape\n {X_normalized.shape}')
+     
+    def linear_regression_normal_equation(X, y):
+        X_transpose = np.transpose(X)
+        X_transpose_X = np.dot(X_transpose, X)
+        X_transpose_y = np.dot(X_transpose, y)
+         
+        try:
+            theta = np.linalg.solve(X_transpose_X, X_transpose_y)
+            return theta
+        except np.linalg.LinAlgError:
+            return None
+     
+     
+    # Add a column of ones to X for the intercept term
+    X_with_intercept1 = np.c_[np.ones((X_normalized.shape[0], 1)), X_normalized]
+     
+    theta1 = linear_regression_normal_equation(X_with_intercept1, y)
+    if theta1 is not None:
+        print(f'Theta is: \n{theta1.shape}')
+    else:
+        print("Unable to compute theta. The matrix X_transpose_X is singular.")
 
+    loaded_test_data = load(f'{file_path}/test_data_univar.joblib')
+    loaded_X = loaded_test_data[0]
+    loaded_y = loaded_test_data[1]
+
+    # Add a column of ones to X for the intercept term
+    X_with_intercept2 = np.c_[np.ones((loaded_X.shape[0], 1)), loaded_X]
+
+    theta2 = linear_regression_normal_equation(X_with_intercept2, loaded_y)
+    if theta2 is not None:
+        print(f'Theta is: \n{theta2.shape}')
+    else:
+        print("Unable to compute theta. The matrix X_transpose_X is singular.")
+
+    plt.plot(X_normalized, y, color='green', marker='o', linestyle='solid')
+    plt.plot(loaded_X, loaded_y, color='red', marker='o', linestyle='solid')
+    plt.xlabel(f'Multivar Linear Regression Model, theta: {theta1}')
+    plt.ylabel(f'Univar Linear Regression Model, theta: {theta2}')
+    plt.title('Comparison of the models (multiple and univar)')
+    plt.savefig(f'{file_path}/graph_comparing1.png')
+    plt.close()
+
+    # Create data set.
     random_state = 101
-
     X_normalized, y = make_regression(random_state=random_state, n_features=17, noise=17)
-    X_train, X_test, y_train, y_test = train_test_split(
+    X_train1, X_test1, y_train1, y_test1 = train_test_split(
         X_normalized, y, test_size=0.3, random_state=random_state)
 
     model = LinearRegression()
     print(f'Model:\n {model}')
-    model.fit(X_train, y_train)
-    print(f'model.fit(X_train, y_train)\n {model.fit(X_train, y_train)}')
+    model.fit(X_train1, y_train1)
+    print(f'model.fit(X_train, y_train)\n {model.fit(X_train1, y_train1)}')
 
-    model.predict(X_test)
-    print(model.predict(X_test))
-    model.score(X_test, y_test)
-    print(f'model.score(X_test, y_test)\n {model.score(X_test, y_test)}')
+    scalar = StandardScaler(with_std=True)
+    scalar.fit(X_test1, y_test1)
+    to_compare_metrics = scalar.scale_
+    print(f'To_compare_metrics (scalar.scale_)\n {to_compare_metrics}')
+
+    model.predict(X_test1)
+    print(model.predict(X_test1))
+    model.score(X_test1, y_test1)
+    print(f'model.score(X_test, y_test)\n {model.score(X_test1, y_test1)}')
 
     # Save model with pickle
     with open('../modelmultivar.pkl', 'wb') as file:
@@ -128,21 +181,26 @@ if __name__ == "__main__":
     loaded_unimodel = load(f'{file_path}/modelunivar.joblib')
     loaded_testdata = load(f'{file_path}/test_data_univar.joblib')
 
-    loaded_multimodel.predict(X_test)
-    multi_predict = loaded_multimodel.predict(X_test)
+    loaded_multimodel.predict(X_test1)
+    multi_predict = loaded_multimodel.predict(X_test1)
 
     print(f'multivar_predict:\n {multi_predict}')
 
-    plt.scatter(multi_predict, y_test, color='red', marker='o')
+    plt.scatter(multi_predict, y_test1, color='red', marker='o')
     plt.savefig(f'{file_path}/graph2.png')
     plt.close()
 
-    loaded_unimodel.predict(loaded_testdata[0])
-    univar_predict = loaded_unimodel.predict(loaded_testdata[0])
+    loaded_testdata[0], loaded_testdata[1] = make_regression(
+        random_state=random_state, n_features=1, noise=1)
+    X_train2, X_test2, y_train2, y_test2 = train_test_split(
+        loaded_testdata[0], loaded_testdata[1], test_size=0.4, random_state=random_state)
+
+    loaded_unimodel.predict(X_test2)
+    univar_predict = loaded_unimodel.predict(X_test2)
 
     print(f'univar_predict:\n {univar_predict}')
 
-    plt.scatter(univar_predict, loaded_testdata[1], color='green', marker='o')
+    plt.scatter(univar_predict, y_test2, color='green', marker='o')
     plt.savefig(f'{file_path}/graph3.png')
     plt.close()
 
@@ -183,6 +241,11 @@ if __name__ == "__main__":
     model.fit(X_train, y_train)
     print(f'model.fit(X_train, y_train)\n {model.fit(X_train, y_train)}')
 
+    scalar = StandardScaler(with_std=True)
+    scalar.fit(X_test, y_test)
+    to_compare_metrics = scalar.scale_
+    print(f'To_compare_metrics (scalar.scale_)\n {to_compare_metrics}')
+
     model.predict(X_test)
     prediction = model.predict(X_test)
     print(f'Prediction:\n {prediction}')
@@ -206,6 +269,16 @@ if __name__ == "__main__":
     X, y = make_regression(random_state=random_state, n_features=17, noise=17)
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.3, random_state=random_state)
+
+    model = LinearRegression()
+    print(f'Model:\n {model}')
+    model.fit(X_train, y_train)
+    print(f'model.fit(X_train, y_train)\n {model.fit(X_train, y_train)}')
+
+    scalar = StandardScaler(with_std=True)
+    scalar.fit(X_test, y_test)
+    to_compare_metrics = scalar.scale_
+    print(f'To_compare_metrics (scalar.scale_)\n {to_compare_metrics}')
 
     model.predict(X_test)
     prediction = model.predict(X_test)
