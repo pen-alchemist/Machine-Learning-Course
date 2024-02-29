@@ -16,7 +16,7 @@ from sklearn.model_selection import train_test_split
 
 if __name__ == "__main__":
     # Read csv file with pandas
-    csv_path = 'kc_house_data.csv'
+    csv_path = '../kc_house_data.csv'
     df = pd.read_csv(csv_path)
 
     # Make basic data analysis with pandas
@@ -75,13 +75,13 @@ if __name__ == "__main__":
     print(model.score(X_test, y_test))
 
     # Save model with pickle
-    with open('modelmultivar.pkl', 'wb') as file:
+    with open('../modelmultivar.pkl', 'wb') as file:
         pickle.dump(model, file)
 
     # Save model with joblib
-    dump(model, 'modelunivar.joblib')
+    dump(model, '../modelunivar.joblib')
     # Save data to test
-    dump([X_test, y_test], 'test_data_univar.joblib')
+    dump([X_test, y_test], '../test_data_univar.joblib')
 
     # Multivariate model training
     multi_selection = df.drop(['id', 'date', 'price', 'zipcode'], axis=1)
@@ -115,15 +115,15 @@ if __name__ == "__main__":
     print(model.score(X_test, y_test))
 
     # Save model with pickle
-    with open('modelmultivar.pkl', 'wb') as file:
+    with open('../modelmultivar.pkl', 'wb') as file:
         pickle.dump(model, file)
 
     # Save model with joblib
-    dump(model, 'modelmultivar.joblib')
+    dump(model, '../modelmultivar.joblib')
 
-    loaded_multimodel = load('modelmultivar.joblib')
-    loaded_unimodel = load('modelunivar.joblib')
-    loaded_testdata = load('test_data_univar.joblib')
+    loaded_multimodel = load('../modelmultivar.joblib')
+    loaded_unimodel = load('../modelunivar.joblib')
+    loaded_testdata = load('../test_data_univar.joblib')
 
     loaded_multimodel.predict(X_test)
     multi_predict = loaded_multimodel.predict(X_test)
@@ -142,7 +142,7 @@ if __name__ == "__main__":
     plt.savefig('graph3.png')
 
     # Creating two multiple linear regression models:
-    csv_path = 'customers-100.csv'
+    csv_path = '../customers-100.csv'
     df = pd.read_csv(csv_path)
 
     df.head()
@@ -182,7 +182,7 @@ if __name__ == "__main__":
     print(model.score(X_test, y_test))
     model.coef_
     print(model.coef_)
-    dump(model, 'multivarmodel1.joblib')
+    dump(model, '../multivarmodel1.joblib')
 
     y = np.asarray(df['Vacation'].values.tolist())
     y = y.reshape(len(y), 1)
@@ -205,10 +205,10 @@ if __name__ == "__main__":
     print(model.score(X_test, y_test))
     model.coef_
     print(model.coef_)
-    dump(model, 'multivarmodel2.joblib')
+    dump(model, '../multivarmodel2.joblib')
 
-    model1 = load('multivarmodel1.joblib').predict(X_test)
-    model2 = load('multivarmodel2.joblib').predict(X_test)
+    model1 = load('../multivarmodel1.joblib').predict(X_test)
+    model2 = load('../multivarmodel2.joblib').predict(X_test)
 
     plt.plot(model1, model2, color='blue', marker='o')
     plt.savefig('graph6.png')
