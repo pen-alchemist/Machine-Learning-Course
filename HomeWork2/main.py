@@ -13,6 +13,19 @@ from sklearn.datasets import make_regression
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
+
+def linear_regression_normal_equation(X, y):
+    X_transpose = np.transpose(X)
+    X_transpose_X = np.dot(X_transpose, X)
+    X_transpose_y = np.dot(X_transpose, y)
+
+    try:
+        theta = np.linalg.solve(X_transpose_X, X_transpose_y)
+        return theta
+    except np.linalg.LinAlgError:
+        return None
+
+
 if __name__ == "__main__":
     file_path = Path(__file__).resolve().parent
 
@@ -107,24 +120,12 @@ if __name__ == "__main__":
     print(X_normalized)
     print(f'X_normalized.shape\n {X_normalized.shape}')
      
-    def linear_regression_normal_equation(X, y):
-        X_transpose = np.transpose(X)
-        X_transpose_X = np.dot(X_transpose, X)
-        X_transpose_y = np.dot(X_transpose, y)
-         
-        try:
-            theta = np.linalg.solve(X_transpose_X, X_transpose_y)
-            return theta
-        except np.linalg.LinAlgError:
-            return None
-     
-     
     # Add a column of ones to X for the intercept term
     X_with_intercept1 = np.c_[np.ones((X_normalized.shape[0], 1)), X_normalized]
      
     theta1 = linear_regression_normal_equation(X_with_intercept1, y)
     if theta1 is not None:
-        print(f'Theta is: \n{theta1.shape}')
+        print(f'Theta is: \n{theta1}')
     else:
         print("Unable to compute theta. The matrix X_transpose_X is singular.")
 
@@ -137,7 +138,7 @@ if __name__ == "__main__":
 
     theta2 = linear_regression_normal_equation(X_with_intercept2, loaded_y)
     if theta2 is not None:
-        print(f'Theta is: \n{theta2.shape}')
+        print(f'Theta is: \n{theta2}')
     else:
         print("Unable to compute theta. The matrix X_transpose_X is singular.")
 
@@ -231,6 +232,15 @@ if __name__ == "__main__":
     print(f'y is:\n {y}')
     print(f'y.shape\n {y.shape}')
 
+    # Add a column of ones to X for the intercept term
+    X_with_intercept1 = np.c_[np.ones((X.shape[0], 1)), X]
+
+    theta1 = linear_regression_normal_equation(X_with_intercept1, y)
+    if theta1 is not None:
+        print(f'Theta is: \n{theta1}')
+    else:
+        print("Unable to compute theta. The matrix X_transpose_X is singular.")
+
     random_state = 101
     X, y = make_regression(random_state=random_state, n_features=17, noise=17)
     X_train, X_test, y_train, y_test = train_test_split(
@@ -258,12 +268,25 @@ if __name__ == "__main__":
     print(f'model.score(X_test, y_test)\n {model.score(X_test, y_test)}')
     model.coef_
     print(f'model.coef_:\n {model.coef_}')
+    model.mean_
+    print(f'model.mean_:\n {model.mean_}')
+    model.var_
+    print(f'model.var_:\n {model.var_}')
     dump(model, f'{file_path}/multivarmodel1.joblib')
 
     y = np.asarray(df['Vacation'].values.tolist())
     y = y.reshape(len(y), 1)
     print(f'y is:\n {y}')
     print(f'y.shape\n {y.shape}')
+
+    # Add a column of ones to X for the intercept term
+    X_with_intercept2 = np.c_[np.ones((X.shape[0], 1)), X]
+
+    theta2 = linear_regression_normal_equation(X_with_intercept2, y)
+    if theta2 is not None:
+        print(f'Theta is: \n{theta2}')
+    else:
+        print("Unable to compute theta. The matrix X_transpose_X is singular.")
 
     random_state = 101
     X, y = make_regression(random_state=random_state, n_features=17, noise=17)
@@ -292,6 +315,10 @@ if __name__ == "__main__":
     print(f'model.score(X_test, y_test)\n {model.score(X_test, y_test)}')
     model.coef_
     print(f'model.coef_:\n {model.coef_}')
+    model.mean_
+    print(f'model.mean_:\n {model.mean_}')
+    model.var_
+    print(f'model.var_:\n {model.var_}')
     dump(model, f'{file_path}/multivarmodel2.joblib')
 
     model1 = load(f'{file_path}/multivarmodel1.joblib').predict(X_test)
