@@ -54,6 +54,7 @@ if __name__ == "__main__":
     plt.ylabel('price')
     plt.savefig(f'{file_path}/graph1.png')
     plt.savefig(f'{file_path}/graph1.pdf')
+    plt.close()
 
     # Let's create a DataFrame "Independent_Variables" to visualize our final independent features
     independ_variables = pd.DataFrame(X)
@@ -134,6 +135,7 @@ if __name__ == "__main__":
 
     plt.scatter(multi_predict, y_test, color='red', marker='o')
     plt.savefig(f'{file_path}/graph2.png')
+    plt.close()
 
     loaded_unimodel.predict(loaded_testdata[0])
     univar_predict = loaded_unimodel.predict(loaded_testdata[0])
@@ -142,6 +144,7 @@ if __name__ == "__main__":
 
     plt.scatter(univar_predict, loaded_testdata[1], color='green', marker='o')
     plt.savefig(f'{file_path}/graph3.png')
+    plt.close()
 
     # Creating two multiple linear regression models:
     csv_path = f'{file_path}/customers-100.csv'
@@ -186,6 +189,7 @@ if __name__ == "__main__":
 
     plt.scatter(prediction, y_test, color='yellow', marker='o')
     plt.savefig(f'{file_path}/graph4.png')
+    plt.close()
 
     model.score(X_test, y_test)
     print(f'model.score(X_test, y_test)\n {model.score(X_test, y_test)}')
@@ -209,6 +213,7 @@ if __name__ == "__main__":
 
     plt.scatter(prediction, y_test, color='blue', marker='o')
     plt.savefig(f'{file_path}/graph5.png')
+    plt.close()
 
     model.score(X_test, y_test)
     print(f'model.score(X_test, y_test)\n {model.score(X_test, y_test)}')
@@ -221,3 +226,4 @@ if __name__ == "__main__":
 
     plt.plot(model1, model2, color='blue', marker='o')
     plt.savefig(f'{file_path}/graph6.png')
+    plt.close()
