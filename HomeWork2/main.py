@@ -233,9 +233,9 @@ if __name__ == "__main__":
     print(f'y.shape\n {y.shape}')
 
     # Add a column of ones to X for the intercept term
-    X_with_intercept1 = np.c_[np.ones((X.shape[0], 1)), X]
+    X_with_intercept3 = np.c_[np.ones((X.shape[0], 1)), X]
 
-    theta1 = linear_regression_normal_equation(X_with_intercept1, y)
+    theta1 = linear_regression_normal_equation(X_with_intercept3, y)
     if theta1 is not None:
         print(f'Theta is: \n{theta1}')
     else:
@@ -280,9 +280,9 @@ if __name__ == "__main__":
     print(f'y.shape\n {y.shape}')
 
     # Add a column of ones to X for the intercept term
-    X_with_intercept2 = np.c_[np.ones((X.shape[0], 1)), X]
+    X_with_intercept4 = np.c_[np.ones((X.shape[0], 1)), X]
 
-    theta2 = linear_regression_normal_equation(X_with_intercept2, y)
+    theta2 = linear_regression_normal_equation(X_with_intercept4, y)
     if theta2 is not None:
         print(f'Theta is: \n{theta2}')
     else:
