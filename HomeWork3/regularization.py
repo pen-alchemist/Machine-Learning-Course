@@ -1,40 +1,15 @@
-import csv
-import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.datasets import make_classification
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.linear_model import Ridge, Lasso, ElasticNet
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from joblib import dump
 from sklearn import preprocessing
 from sklearn.metrics import log_loss
-from sklearn.datasets import make_regression
 
 
-# Reading file and dropping values
-csv_path = 'customers-100.csv'
-df = pd.read_csv(csv_path, quoting=csv.QUOTE_NONNUMERIC)
-drop_list = [
-    'Salary', 
-    'Vacation', 
-    'Index', 
-    'Customer Id', 
-    'First Name', 
-    'Last Name', 
-    'Phone 1', 
-    'Email', 
-    'Phone 2'
-]
-multi_selection = df.drop(drop_list, axis=1)
-
-
-# Making variables
-X = np.asarray(multi_selection.values.tolist())
-y = np.asarray(df['Salary'].values.tolist()) 
-y = y.reshape(len(y), 1)
-
-
-X, y = make_regression(random_state=4, n_features=17, noise=17)
+X, y = make_classification(random_state=42)
 # Data normalization
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.15, random_state=42)
 
@@ -48,7 +23,6 @@ ridge_model = Ridge(alpha=0.001, max_iter=1000)
 ridge_model.fit(X_train, y_train)
 predict = ridge_model.predict(X_test)
 
-print('Price column mean value: ', df['Salary'].mean())
 MAE = mean_absolute_error(y_test, predict)
 RMSE = np.sqrt(mean_squared_error(y_test, predict))
 
@@ -57,7 +31,6 @@ lasso_model = Lasso(alpha=0.001, max_iter=1000, tol=0.1)
 lasso_model.fit(X_train, y_train)
 predict_2 = lasso_model.predict(X_test)
 
-print('Price column mean value: ', df['Salary'].mean())
 MAE = mean_absolute_error(y_test, predict_2)
 print('MAE: ', MAE)
 RMSE = np.sqrt(mean_squared_error(y_test, predict_2))
@@ -69,7 +42,7 @@ elastic_model = ElasticNet(alpha=0.001, l1_ratio=0.5, max_iter=1000, tol=0.1)
 elastic_model.fit(X_train, y_train)
 predict_3 = elastic_model.predict(X_test)
 
-print('Price column mean value: ', df['Salary'].mean())
+
 MAE = mean_absolute_error(y_test, predict_3)
 print('Mean absolute error: ', MAE)
 RMSE = np.sqrt(mean_squared_error(y_test, predict_3))
@@ -106,7 +79,7 @@ print(f'Score of second model Lasso: \n {lasso_model.score(X_test, y_test)}')
 print(f'Score of third model ElasticNet: \n {elastic_model.score(X_test, y_test)}')
 
 # Save the best model in a list
-dump(elastic_model, "best_model.joblib")
+dump(lasso_model, "best_model.joblib")
 
 
 # CV
