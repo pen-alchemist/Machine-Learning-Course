@@ -7,6 +7,7 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import normalize
 from sklearn.metrics import silhouette_samples, silhouette_score
 
+import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 
 
@@ -18,6 +19,8 @@ print(f'Training Labels: {y_train.shape}')
 print(f'Labels: {y_train}')
 
 width, height, channels = x_train.shape[1], x_train.shape[2], 1
+x_train_orig = x_train
+x_test_orig = x_test
 x_train = x_train.flatten()
 x_test = x_test.flatten()
 x_train = x_train.reshape(len(x_train), 1)
@@ -76,7 +79,7 @@ for n_clusters in range_n_clusters:
     )
 
     # Compute the silhouette scores for each sample
-    sample_silhouette_values = silhouette_samples(X_test, cluster_labels)
+    sample_silhouette_values = silhouette_samples(x_test, cluster_labels)
 
     y_lower = 10
     for i in range(n_clusters):
@@ -118,7 +121,7 @@ for n_clusters in range_n_clusters:
     # 2nd Plot showing the actual clusters formed
     colors = cm.nipy_spectral(cluster_labels.astype(float) / n_clusters)
     ax2.scatter(
-        X[:, 0], X[:, 1], marker=".", s=30, lw=0, alpha=0.7, c=colors, edgecolor="k"
+        x_test[:, 0], x_test[:, 1], marker=".", s=30, lw=0, alpha=0.7, c=colors, edgecolor="k"
     )
 
     # Labeling the clusters
@@ -151,17 +154,18 @@ for n_clusters in range_n_clusters:
 plt.show()
 
 
+# Plot print image
 idx = 1
-img = x_train[idx]
+img = x_train_orig[idx]
 label = y_train[idx]
 print(img.shape)
 plt.imshow(img)
 print("label", label)
 
-# concatenate images horizontally
+# Concatenate images horizontally
 def concat_images(imgs_list):
     return np.concatenate(imgs_list, axis=1)
 
-# concat 0 & 1 images
-combined_image = concat_images([x_train[0], x_train[1]])
+# Concat 0 & 1 images
+combined_image = concat_images([x_train_orig[0], x_train_orig[1]])
 plt.imshow(combined_image)
