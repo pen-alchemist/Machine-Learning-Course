@@ -111,6 +111,9 @@ pca = PCA(n_components=1)
 x_pca_train = pca.fit_transform(x_train)
 x_pca_test = pca.transform(x_test)
 
+y_train = y_train.reshape(-1, 1)
+y_test = y_test.reshape(-1, 1)
+
 # One hot encode labels
 lab_encoder = LabelEncoder()
 y_train = lab_encoder.fit_transform(y_train)
