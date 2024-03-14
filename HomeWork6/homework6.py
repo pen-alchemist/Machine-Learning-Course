@@ -30,6 +30,11 @@ def dataset_selecting(features, labels):
 # Load data MNIST
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
+x_train = x_train.size(400)
+x_test = x_test.size(400)
+y_train = y_train.size(400)
+y_test = y_test.size(400)
+
 print(f'Training Data: {x_train.shape}')
 print(f'Training Labels: {y_train.shape}')
 print(f'Labels: {y_train}')
@@ -49,9 +54,9 @@ x_test = x_test.reshape(len(x_test), 1)
 x_train = normalize(x_train)
 x_test = normalize(x_test)
 
-scaler = StandardScaler()
-x_train = scaler.fit_transform(x_train)
-x_test = scaler.transform(x_test)
+# scaler = StandardScaler()
+# x_train = scaler.fit_transform(x_train)
+# x_test = scaler.transform(x_test)
 
 y_train = y_train.reshape(-1, 1)
 y_test = y_test.reshape(-1, 1)
@@ -69,7 +74,7 @@ y_test_orig = y_test
 x_test_orig = x_test
 
 # Model making
-model1 = LogisticRegression(random_state=42, max_iter=100000)
+model1 = LogisticRegression(random_state=42, max_iter=10000)
 model1.fit(x_train, y_train)
 predict = model1.predict(x_test)
 
@@ -77,6 +82,11 @@ print(f'Predict of logistic regression is: {predict}')
 
 # Load data CIFAR10
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+
+x_train = x_train.size(400)
+x_test = x_test.size(400)
+y_train = y_train.size(400)
+y_test = y_test.size(400)
 
 print(f'Training Data: {x_train.shape}')
 print(f'Training Labels: {y_train.shape}')
@@ -86,15 +96,6 @@ x_test, y_test = dataset_selecting(x_test, y_test)
 
 print(f'Labels: {y_train}')
 print(f'Features: {x_train}')
-
-# Describes max size of data
-max_items_x = np.random.choice(range(x_train.shape[0]), size=3000, replace=False)
-max_items_y = np.random.choice(range(y_train.shape[0]), size=3000, replace=False)
-
-x_train = x_train[max_items_x,:].todense()
-x_test = x_train[max_items_x,:].todense()
-y_train = x_train[max_items_y,:].todense()
-y_test = x_train[max_items_y,:].todense()
 
 # PCA, components = 2
 pca = PCA(n_components=2)
