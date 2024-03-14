@@ -88,13 +88,13 @@ print(f'Labels: {y_train}')
 print(f'Features: {x_train}')
 
 # Describes max size of data
-max_items = np.random.choice(range(x_train.shape[0]), size=3000, replace=False)
+max_items_x = np.random.choice(range(x_train.shape[0]), size=3000, replace=False)
+max_items_y = np.random.choice(range(y_train.shape[0]), size=3000, replace=False)
 
-x_train = x_train[max_items,:].todense()
-x_test = x_train[max_items,:].todense()
-
-y_train = x_train[max_items,:].todense()
-y_test = x_train[max_items,:].todense()
+x_train = x_train[max_items_x,:].todense()
+x_test = x_train[max_items_x,:].todense()
+y_train = x_train[max_items_y,:].todense()
+y_test = x_train[max_items_y,:].todense()
 
 # PCA, components = 2
 pca = PCA(n_components=2)
