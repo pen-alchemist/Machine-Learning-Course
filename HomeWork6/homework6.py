@@ -107,7 +107,7 @@ x_train = normalize(x_train)
 x_test = normalize(x_test)
 
 # PCA, components = 2
-pca = PCA(n_components=2)
+pca = PCA(n_components=1)
 x_pca_train = pca.fit_transform(x_train)
 x_pca_test = pca.transform(x_test)
 
