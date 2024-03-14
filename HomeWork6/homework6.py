@@ -97,19 +97,19 @@ x_test, y_test = dataset_selecting(x_test, y_test)
 print(f'Labels: {y_train}')
 print(f'Features: {x_train}')
 
+x_train = x_train.flatten()
+x_test = x_test.flatten()
+x_train = x_train.reshape(len(x_train), 1)
+x_test = x_test.reshape(len(x_test), 1)
+
+# Normalizing data to 0,1
+x_train = normalize(x_train)
+x_test = normalize(x_test)
+
 # PCA, components = 2
 pca = PCA(n_components=2)
 x_pca_train = pca.fit_transform(x_train)
 x_pca_test = pca.transform(x_test)
-
-# x_train = x_train.flatten()
-# x_test = x_test.flatten()
-# x_train = x_train.reshape(len(x_train), 1)
-# x_test = x_test.reshape(len(x_test), 1)
-
-# Normalizing data to 0,1
-# x_train = normalize(x_train)
-# x_test = normalize(x_test)
 
 # One hot encode labels
 lab_encoder = LabelEncoder()
