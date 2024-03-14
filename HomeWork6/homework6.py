@@ -61,15 +61,17 @@ lab_encoder = LabelEncoder()
 y_train = lab_encoder.fit_transform(y_train)
 y_test = lab_encoder.transform(y_test)
 
-
 # Confirm scale of pixels
 print(f'Train min={x_train.min()} max={x_train.max()}')
 print(f'Test min={x_test.min()} max={x_test.max()}')
 
+y_test_orig = y_test
+x_test_orig = x_test
+
 # Model making
-model = LogisticRegression(random_state=42, max_iter=100000)
-model.fit(x_train, y_train)
-predict = model.predict(x_test)
+model1 = LogisticRegression(random_state=42, max_iter=100000)
+model1.fit(x_train, y_train)
+predict = model1.predict(x_test)
 
 print(f'Predict of logistic regression is: {predict}')
 
@@ -92,6 +94,11 @@ pca.fit(x_train)
 x_pca_train = pca.transform(x_train)
 x_pca_test = pca.transform(x_test)
 
+x_train = x_train.flatten()
+x_test = x_test.flatten()
+x_train = x_train.reshape(len(x_train), 1)
+x_test = x_test.reshape(len(x_test), 1)
+
 # Normalizing data to 0,1
 x_train = normalize(x_train)
 x_test = normalize(x_test)
@@ -106,8 +113,11 @@ print(f'Train min={x_train.min()} max={x_train.max()}')
 print(f'Test min={x_test.min()} max={x_test.max()}')
 
 # Model making
-model = LogisticRegression(random_state=42, max_iter=100000)
-model.fit(x_train, y_train)
+model2 = LogisticRegression(random_state=42, max_iter=100000)
+model2.fit(x_train, y_train)
 # predict = model.predict(x_test)
 
 print(f'Predict of logistic regression is: {predict}')
+
+print(f'First model accuracy:{model1.score(x_test_orig, y_test_orig)}')
+print(f'First model accuracy:{model2.score(x_test, y_test)}')
