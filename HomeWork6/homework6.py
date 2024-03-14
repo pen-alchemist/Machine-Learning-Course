@@ -80,7 +80,6 @@ print(f'Predict of logistic regression is: {predict}')
 
 print(f'Training Data: {x_train.shape}')
 print(f'Training Labels: {y_train.shape}')
-print(f'Labels: {y_train}')
 
 x_train, y_train = dataset_selecting(x_train, y_train)
 x_test, y_test = dataset_selecting(x_test, y_test)
@@ -90,18 +89,17 @@ print(f'Features: {x_train}')
 
 # Let's say, components = 2
 pca = PCA(n_components=2)
-pca.fit(x_train)
-x_pca_train = pca.transform(x_train)
+x_pca_train = pca.fit_transform(x_train)
 x_pca_test = pca.transform(x_test)
 
-x_train = x_train.flatten()
-x_test = x_test.flatten()
-x_train = x_train.reshape(len(x_train), 1)
-x_test = x_test.reshape(len(x_test), 1)
+# x_train = x_train.flatten()
+# x_test = x_test.flatten()
+# x_train = x_train.reshape(len(x_train), 1)
+# x_test = x_test.reshape(len(x_test), 1)
 
 # Normalizing data to 0,1
-x_train = normalize(x_train)
-x_test = normalize(x_test)
+# x_train = normalize(x_train)
+# x_test = normalize(x_test)
 
 # One hot encode labels
 lab_encoder = LabelEncoder()
@@ -109,13 +107,13 @@ y_train = lab_encoder.fit_transform(y_train)
 y_test = lab_encoder.transform(y_test)
 
 # Confirm scale of pixels
-print(f'Train min={x_train.min()} max={x_train.max()}')
-print(f'Test min={x_test.min()} max={x_test.max()}')
+print(f'Train min={x_pca_train.min()} max={x_train.max()}')
+print(f'Test min={x_pca_test.min()} max={x_test.max()}')
 
 # Model making
 model2 = LogisticRegression(random_state=42, max_iter=100000)
-model2.fit(x_train, y_train)
-# predict = model.predict(x_test)
+model2.fit(x_pca_train, y_train)
+predict = model2.predict(x_pca_test)
 
 print(f'Predict of logistic regression is: {predict}')
 
