@@ -76,7 +76,7 @@ predict = model1.predict(x_test)
 print(f'Predict of logistic regression is: {predict}')
 
 # Load data CIFAR10
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
+(x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
 print(f'Training Data: {x_train.shape}')
 print(f'Training Labels: {y_train.shape}')
@@ -86,6 +86,15 @@ x_test, y_test = dataset_selecting(x_test, y_test)
 
 print(f'Labels: {y_train}')
 print(f'Features: {x_train}')
+
+# Describes max size of data
+max_items = np.random.choice(range(x_train.shape[0]), size=3000, replace=False)
+
+x_train = x_train[max_items,:].todense()
+x_test = x_train[max_items,:].todense()
+
+y_train = x_train[max_items,:].todense()
+y_test = x_train[max_items,:].todense()
 
 # PCA, components = 2
 pca = PCA(n_components=2)
