@@ -30,10 +30,10 @@ def dataset_selecting(features, labels):
 # Load data MNIST
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-x_train = x_train.size(400)
-x_test = x_test.size(400)
-y_train = y_train.size(400)
-y_test = y_test.size(400)
+x_train = x_train[0:99]
+x_test = x_test[0:99]
+y_train = y_train[0:99]
+y_test = y_test[0:99]
 
 print(f'Training Data: {x_train.shape}')
 print(f'Training Labels: {y_train.shape}')
@@ -83,10 +83,10 @@ print(f'Predict of logistic regression is: {predict}')
 # Load data CIFAR10
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
-x_train = x_train.size(400)
-x_test = x_test.size(400)
-y_train = y_train.size(400)
-y_test = y_test.size(400)
+x_train = x_train[0:99]
+x_test = x_test[0:99]
+y_train = y_train[0:99]
+y_test = y_test[0:99]
 
 print(f'Training Data: {x_train.shape}')
 print(f'Training Labels: {y_train.shape}')
