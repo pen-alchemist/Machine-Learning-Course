@@ -7,24 +7,24 @@ from keras.src.utils import to_categorical
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
 from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import normalize, LabelEncoder
+from sklearn.preprocessing import normalize, LabelEncoder, StandardScaler
 
 
-def dataset_selecting(labels, features):
+def dataset_selecting(features, labels):
     """Returns dict with x_train and y_train if y >= 5 or y < 5"""
-    x_train, y_train = [], []
+    x, y = [], []
 
     for label_ind in range(len(labels)):
         label = labels[label_ind]
 
         if label >= 5 or label < 5:
-            y_train.append(label)
-            x_train.append(features[label_ind])
+            y.append(label)
+            x.append(features[label_ind])
 
-    y_train = np.asarray(y_train)
-    x_train = np.asarray(x_train)
+    x = np.asarray(x_train)
+    y = np.asarray(x_train)
 
-    return x_train, y_train
+    return x, y
 
 
 # Load data MNIST
@@ -35,7 +35,11 @@ print(f'Training Labels: {y_train.shape}')
 print(f'Labels: {y_train}')
 print(f'Features: {x_train}')
 
-x_train, y_train = dataset_selecting(y_train, x_train)
+x_train, y_train = dataset_selecting(x_train, y_train)
+x_test, y_test = dataset_selecting(x_test, y_test)
+
+print(f'Labels: {y_train}')
+print(f'Features: {x_train}')
 
 x_train = x_train.flatten()
 x_test = x_test.flatten()
@@ -45,10 +49,18 @@ x_test = x_test.reshape(len(x_test), 1)
 x_train = normalize(x_train)
 x_test = normalize(x_test)
 
+scaler = StandardScaler()
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.transform(x_test)
+
+y_train = y_train.reshape(-1, 1)
+y_test = y_test.reshape(-1, 1)
+
 # One hot encode labels
 lab_encoder = LabelEncoder()
 y_train = lab_encoder.fit_transform(y_train)
 y_test = lab_encoder.transform(y_test)
+
 
 # Confirm scale of pixels
 print(f'Train min={x_train.min()} max={x_train.max()}')
@@ -68,7 +80,11 @@ print(f'Training Data: {x_train.shape}')
 print(f'Training Labels: {y_train.shape}')
 print(f'Labels: {y_train}')
 
-x_train, y_train = dataset_selecting(y_train, x_train)
+x_train, y_train = dataset_selecting(x_train, y_train)
+x_test, y_test = dataset_selecting(x_test, y_test)
+
+print(f'Labels: {y_train}')
+print(f'Features: {x_train}')
 
 # Let's say, components = 2
 pca = PCA(n_components=2)
@@ -92,6 +108,6 @@ print(f'Test min={x_test.min()} max={x_test.max()}')
 # Model making
 model = LogisticRegression(random_state=42, max_iter=100000)
 model.fit(x_train, y_train)
-predict = model.predict(x_test)
+# predict = model.predict(x_test)
 
 print(f'Predict of logistic regression is: {predict}')
