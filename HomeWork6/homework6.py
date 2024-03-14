@@ -2,12 +2,10 @@ import numpy as np
 
 from keras.datasets import mnist
 from keras.datasets import cifar10
-from keras.src.utils import to_categorical
 
-from sklearn import preprocessing
 from sklearn.decomposition import PCA
 from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import normalize, LabelEncoder, StandardScaler
+from sklearn.preprocessing import normalize, LabelEncoder
 
 
 def dataset_selecting(features, labels):
