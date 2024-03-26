@@ -30,13 +30,14 @@ lab_enc = preprocessing.LabelEncoder()
 y_train = lab_enc.fit_transform(y_train)
 y_test = lab_enc.transform(y_test)
 
-model = Sequential()
-model.add(Dense(16, input_dim=X_train.shape[1], activation='relu'))
-model.add(Dense(16, activation='relu'))
-model.add(Dense(16, activation='relu'))
-model.add(Dense(1, activation='relu'))
+epochs = 10
 
-model.compile(loss="binary_crossentropy", optimizer="adam", metrics=['accuracy'])
+model = Sequential()
+model.add(Dense(16, input_dim=X_train.shape[1], activation='relu'))  # input layer requires input_dim param
+model.add(Dense(16, activation='softmax'))
+model.add(Dense(1, activation='softmax'))
+
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 tensorboard_callback = TensorBoard(
     log_dir='logs',
@@ -49,7 +50,7 @@ tensorboard_callback = TensorBoard(
 model.fit(
     X_train,
     y_train,
-    epochs=100,
+    epochs=epochs,
     shuffle=True,
     batch_size=128,
     verbose=2,
@@ -66,7 +67,7 @@ es = EarlyStopping(
 model.fit(
     X_train,
     y_train,
-    epochs=100,
+    epochs=epochs,
     shuffle=True,
     batch_size=128,
     verbose=2,
@@ -76,7 +77,6 @@ model.fit(
 scores = model.evaluate(X_test, y_test)
 print(model.metrics_names[0], model.metrics_names[1])
 
-EPOCHS = 100
 checkpoint_filepath = 'checkpoint.model.keras'
 model_checkpoint_callback = ModelCheckpoint(
     filepath=checkpoint_filepath,
@@ -89,7 +89,7 @@ model_checkpoint_callback = ModelCheckpoint(
 model.fit(
     X_train,
     y_train,
-    epochs=100,
+    epochs=epochs,
     shuffle=True,
     batch_size=128,
     verbose=2,
