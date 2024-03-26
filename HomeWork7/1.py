@@ -34,10 +34,10 @@ epochs = 10
 
 model = Sequential()
 model.add(Dense(16, input_dim=X_train.shape[1], activation='relu'))  # input layer requires input_dim param
-model.add(Dense(16, activation='softmax'))
-model.add(Dense(1, activation='softmax'))
+model.add(Dense(16, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))
 
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 tensorboard_callback = TensorBoard(
     log_dir='logs',
