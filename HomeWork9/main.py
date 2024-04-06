@@ -130,6 +130,10 @@ train_iterator = datagen.flow(X_train, y_train, batch_size=32)
 test_iterator = datagen.flow(X_test, y_test, batch_size=32)
 
 X_batch_train, y_batch_train = next(train_iterator)
+X_batch_train = X_batch_train.reshape([-1, 28, 28, 1]).astype('float32')
+
+y_train = y_train.reshape(-1, 1)
+y_test = y_test.reshape(-1, 1)
 
 lab_enc = preprocessing.LabelEncoder()
 y_train = lab_enc.fit_transform(y_train)
