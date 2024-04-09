@@ -135,7 +135,7 @@ unet_model.compile(optimizer=tf.keras.optimizers.Adam(),
                    loss="sparse_categorical_crossentropy",
                    metrics="accuracy")
 
-NUM_EPOCHS = 20
+NUM_EPOCHS = 5
 TRAIN_LENGTH = info.splits["train"].num_examples
 STEPS_PER_EPOCH = TRAIN_LENGTH // BATCH_SIZE
 VAL_SUBSPLITS = 5
@@ -161,7 +161,7 @@ def show_predictions(dataset=None, num=1):
             display([image[0], mask[0], create_mask(pred_mask)])
     else:
         display([sample_image, sample_mask,
-                 create_mask(model.predict(sample_image[tf.newaxis, ...]))])
+                 create_mask(unet_model.predict(sample_image[tf.newaxis, ...]))])
 
 
 count = 0
