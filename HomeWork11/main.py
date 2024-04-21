@@ -47,10 +47,10 @@ def classify_review(rev_emb, pos_emb, neg_emb):
 
 
 def get_emb(model_obj, input_text):
-    word_vectors = [model_obj.wv[i] for i in input_text.split() if i in w2v]
+    word_vectors = [model_obj.wv[i] for i in input_text.split() if i in model_obj.wv]
 
     if not word_vectors:
-        return np.zeros(model_obj.vector_size)
+        return np.zeros(model_obj.wv.vector_size)
 
     return np.mean(np.array(word_vectors), axis=0)
 
