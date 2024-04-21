@@ -1,13 +1,13 @@
 import re
 import nltk
 import string
-import numpy as np
-import gensim.models.keyedvectors as w2v
 
 from nltk.corpus import stopwords
 from nltk import word_tokenize
 
 from keras.datasets import imdb
+
+from sklearn.feature_extraction.text import CountVectorizer
 
 from gensim.models import KeyedVectors
 
@@ -46,11 +46,11 @@ def classify_review(rev_emb, pos_emb, neg_emb):
         return 'Negative'
 
 
-def get_emb(model_obj, input_text):
-    word_vectors = [model_obj.wv[i] for i in input_text.split() if i in w2v]
+def get_emb(input_text):
+    word_vectors = [w2v[i] for i in input_text.split() if i in w2v]
 
     if not word_vectors:
-        return np.zeros(model_obj.vector_size)
+        return np.zeros(w2v.vector_size)
 
     return np.mean(np.array(word_vectors), axis=0)
 
@@ -98,10 +98,10 @@ sentences = (('$%^&*(**@'.join(tokenizer.tokenize(review_text))).split('$%^&*(**
 pre_sentences = [preprocess(_sentence) for _sentence in sentences]
 tokenized_text = [word_tokenize(_sentence) for _sentence in pre_sentences]
 stem_word_list = [stopword(_sentence) for _sentence in pre_sentences]
-pos_emb = [get_emb(model, i) for i in positive_words if i]
-neg_emb = [get_emb(model, i) for i in negative_words if i]
+pos_emb = [get_emb(i) for i in positive_words if i]
+neg_emb = [get_emb(i) for i in negative_words if i]
 
-text_emb = [get_emb(model, _sentence) for _sentence in pre_sentences]
+text_emb = [get_emb(_sentence) for _sentence in pre_sentences]
 classification1 = classify_review(text_emb[0], pos_emb, neg_emb)
 classification2 = classify_review(text_emb[1], pos_emb, neg_emb)
 classification3 = classify_review(text_emb[2], pos_emb, neg_emb)
